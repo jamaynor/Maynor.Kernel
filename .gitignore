@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs
+/src/Maynor.Kernel/.vs/Maynor.Kernel
+/src/Maynor.Kernel/obj
+/test/Maynor.Kernel.Tests/obj
