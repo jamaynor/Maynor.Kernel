@@ -9,13 +9,13 @@ namespace Maynor
     {
 
         /// <summary>
-        /// Determines if the Enum is set ONLY to the tested Value
+        /// Determines if the Enum is exactly equal to the tested Value
         /// </summary>
         /// <typeparam name="T">Type of Enum.</typeparam>
         /// <param name="instance">This enum</param>
         /// <param name="value">Enum value to test</param>
         /// <returns></returns>
-        public static bool EqualsFlag<T>(this Enum instance, T value)
+        public static bool EqualsFlag<T>(this T instance, T value) where T: Enum
         {
             Guard.Against.Null(value);
 
@@ -36,7 +36,7 @@ namespace Maynor
         /// <param name="instance">This enum</param>
         /// <param name="value">Enum value to test</param>
         /// <returns></returns>
-        public static bool HasFlag<T>(this Enum instance, T value)
+        public static bool HasFlag<T>(this T instance, T value) where T : Enum
         {
             Guard.Against.Null(value);
 
@@ -59,7 +59,7 @@ namespace Maynor
         /// <param name="instance">Enum to add to</param>
         /// <param name="value">Value to add</param>
         /// <returns></returns>
-        public static T AddFlag<T>(this Enum instance, T value)
+        public static T AddFlag<T>(this T instance, T value) where T : Enum
         {
             Guard.Against.Null(value);
 
@@ -88,7 +88,7 @@ namespace Maynor
         /// <param name="instance">Enum to add to</param>
         /// <param name="value">Value to remove</param>
         /// <returns></returns>
-        public static T RemoveFlag<T>(this Enum instance, T value)
+        public static T RemoveFlag<T>(this T instance, T value) where T : Enum
         {
             try
             {
@@ -98,7 +98,6 @@ namespace Maynor
                 T tRslt = (T)(object)iResult;
 
                 return tRslt;
-                // return (T)(object)(((int)(object)instance & ~(int)(object)value));
             }
             catch (Exception ex)
             {
