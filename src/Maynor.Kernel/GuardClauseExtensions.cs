@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -17,18 +18,16 @@ namespace Maynor
         /// <summary>
         /// Throws an <see cref="ArgumentNullException" /> if <paramref name="input" /> is null.
         /// </summary>
-        public static T Null<T>(this IGuardClause guardClause, T input, [CallerMemberName] string caller = "unknown")
+        public static T Null<T>(this IGuardClause guardClause, T input)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             if (input is null) throw new ArgumentNullException($"{caller} failed because the argument was null.");
-
             return input;
         }
         public static T Null<T>(this IGuardClause guardClause, T input, string message, [CallerMemberName] string caller = "unknown")
         {
             if (string.IsNullOrWhiteSpace(message)) message = $"{caller} failed because the argument was null.";
-
             if (input is null) throw new ArgumentNullException(message);
-
             return input;
         }
 
@@ -37,38 +36,30 @@ namespace Maynor
         /// <summary>
         /// Throws an <see cref="ArgumentNullException" /> if <paramref name="input" /> is null.
         /// Throws an <see cref="ArgumentException" /> if <paramref name="input" /> is an empty string.
-        /// </summary>
-        /// <param name="guardClause"></param>
-        /// <param name="input"></param>
-        /// <param name="parameterName"></param>
-        /// <param name="message">A custom message to include in the exception.</param>
+        /// </summary>        
         /// <returns><paramref name="input" /> if the value is not an empty string or null.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static string NullOrEmpty(this IGuardClause guardClause, string input, [CallerMemberName] string caller = "unknown")
+        public static string NullOrEmpty(this IGuardClause guardClause, string input)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             string message = $"{caller} failed because the input was empty.";
 
             if (input is null) throw new ArgumentNullException(message);
             if (input == string.Empty) throw new ArgumentException(message);
-
             return input;
         }
         /// <summary>
         /// Throws an <see cref="ArgumentNullException" /> if <paramref name="input" /> is null.
         /// Throws an <see cref="ArgumentException" /> if <paramref name="input" /> is an empty string.
         /// </summary>
-        /// <param name="guardClause"></param>
-        /// <param name="input"></param>
-        /// <param name="parameterName"></param>
         /// <param name="caller">Automatically populated by [CallerMemberName] attribute.</param>
         /// <returns><paramref name="input" /> if the value is not an empty string or null.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         public static string NullOrEmpty(this IGuardClause guardClause, string input, string message, [CallerMemberName] string caller = "unknown")
         {
-            if (message.IsNullOrEmpty()) message = $"{caller} failed because the input was empty.";
-
+            if (string.IsNullOrEmpty(message)) message = $"{caller} failed because the input was empty.";
             if (input is null) throw new ArgumentNullException(message);
             if (input == string.Empty) throw new ArgumentException(message);
 
@@ -85,14 +76,13 @@ namespace Maynor
         /// <returns><paramref name="input" /> if the value is not an empty string or null.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        
-        public static IEnumerable<T> NullOrEmpty<T>(this IGuardClause guardClause, IEnumerable<T> enumerable, [CallerMemberName] string caller = "unknown")
+        public static IEnumerable<T> NullOrEmpty<T>(this IGuardClause guardClause, IEnumerable<T> enumerable)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             string message = $"{ caller} failed because the {enumerable.GetType().Name} was null or empty.";
 
             if (enumerable is null) throw new ArgumentNullException(message);
             if (enumerable.Count() == 0) throw new ArgumentException(message);
-
             return enumerable;
         }
         /// <summary>
@@ -108,11 +98,9 @@ namespace Maynor
         /// <exception cref="ArgumentException"></exception>
         public static IEnumerable<T> NullOrEmpty<T>(this IGuardClause guardClause, IEnumerable<T> enumerable, string message, [CallerMemberName] string caller = "unknown")
         {
-            if (message.IsNullOrWhitespace()) message = $"{ caller} failed because the {enumerable.GetType().Name} was null or empty.";
-
+            if (string.IsNullOrEmpty(message)) message = $"{ caller} failed because the {enumerable.GetType().Name} was null or empty.";
             if (enumerable is null) throw new ArgumentNullException(message);
             if (enumerable.Count() == 0) throw new ArgumentException(message);
-
             return enumerable;
         }
 
@@ -127,8 +115,9 @@ namespace Maynor
         /// <returns><paramref name="input" /> if the value is not an empty or whitespace string.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static string NullOrWhiteSpace(this IGuardClause guardClause, string input, [CallerMemberName] string caller = "unknown")
+        public static string NullOrWhiteSpace(this IGuardClause guardClause, string input)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             string message = $"{caller} failed because the input was null or whitespace";
 
             if (input is null) throw new ArgumentNullException(message);
@@ -150,15 +139,21 @@ namespace Maynor
         public static string NullOrWhiteSpace(this IGuardClause guardClause, string input, string message, [CallerMemberName] string caller = "unknown")
         {
             if (message.IsNullOrWhitespace()) message = $"{caller} failed because the input was null or whitespace";
-
             if (input is null) throw new ArgumentNullException(message);
             if (input.Trim() == string.Empty) throw new ArgumentException(message);
 
             return input;
         }
 
-
-
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException" /> if <paramref name="input"/> is less than <paramref name="min"/> or greater than <paramref name="max"/>.
+        /// </summary>
+        public static T OutOfRange<T>(this IGuardClause guardClause, T input, T min, T max)
+        {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
+            string message = $"The {typeof(T).Name} from {caller} is invalid because it was out of range.";
+            return Guard.Against.OutOfRange(input, min, max, message);
+        }
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException" /> if <paramref name="input"/> is less than <paramref name="min"/> or greater than <paramref name="max"/>.
         /// </summary>
@@ -183,7 +178,6 @@ namespace Maynor
         public static T Zero<T>(this IGuardClause guardClause, T input, string message) where T : struct
         {
             if (EqualityComparer<T>.Default.Equals(input, default)) throw new ArgumentException(message);
-
             return input;
         }
 

@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>Maynor</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.9.0.1</Version>
+		<Version>0.9.1.1</Version>
 		<Description>A small set of of classes that simplify .net development. Several extension methods and support for Domain Driven Design.</Description>
 		<Company>Jeremy Maynor</Company>
 		<Product>Maynor Kernel</Product>
