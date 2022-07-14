@@ -157,10 +157,11 @@ namespace Maynor
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException" /> if <paramref name="input"/> is less than <paramref name="min"/> or greater than <paramref name="max"/>.
         /// </summary>
-        public static T OutOfRange<T>(this IGuardClause guardClause, T input, T min, T max, string message)
+        public static T OutOfRange<T>(this IGuardClause guardClause, T input, T min, T max, string message, [CallerMemberName] string caller = "unknown")
         {
-            Comparer<T> comparer = Comparer<T>.Default;
+            if (string.IsNullOrWhiteSpace(message)) message = $"The {typeof(T).Name} passed into {caller} is out of range.";
 
+            Comparer<T> comparer = Comparer<T>.Default;
             if (comparer.Compare(input, min) < 0) throw new ArgumentException(message);
             else if (comparer.Compare(input, max) > 0) throw new ArgumentException(message);
 
@@ -175,8 +176,9 @@ namespace Maynor
         /// <param name="parameterName"></param>
         /// <returns><paramref name="input" /> if the value is not zero.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static T Zero<T>(this IGuardClause guardClause, T input, string message) where T : struct
+        public static T Zero<T>(this IGuardClause guardClause, T input, string message, [CallerMemberName] string caller = "unknown") where T : struct
         {
+            if (string.IsNullOrWhiteSpace(message)) message = $"The {typeof(T).Name} passed into {caller} is zero.";
             if (EqualityComparer<T>.Default.Equals(input, default)) throw new ArgumentException(message);
             return input;
         }
@@ -189,8 +191,9 @@ namespace Maynor
         /// <param name="parameterName"></param>
         /// <returns><paramref name="input" /> if the value is not default for that type.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static T Default<T>(this IGuardClause guardClause, T input, [CallerMemberName] string caller = "")
+        public static T Default<T>(this IGuardClause guardClause, T input)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             string message = $"The value of {typeof(T).Name} cannot be dafault in the method {caller}.";
 
             if (EqualityComparer<T>.Default.Equals(input, default!) || input is null)
@@ -202,13 +205,13 @@ namespace Maynor
         public static T Default<T>(this IGuardClause guardClause, T input, string message, [CallerMemberName] string caller = "")
         {
             if (message.IsNullOrWhitespace()) message = $"The value of {typeof(T).Name} cannot be dafault in the method {caller}.";
-
             if (EqualityComparer<T>.Default.Equals(input, default!) || input is null)
             {
                 throw new ArgumentException(message);
             }
             return input;
         }
+
 
         /// <summary>Throws an <see cref="ArgumentException" /> if the lambda function passed in returns false.</summary>
         public static void IsFalse(this IGuardClause guardClause, Func<bool> test, string message)
@@ -222,18 +225,20 @@ namespace Maynor
         }
 
         /// <summary>Throws an <see cref="ArgumentException" /> if the lambda function passed in returns false.</summary>
-        public static void MissingKey<TKey, TValue>(this IGuardClause guardClause, IDictionary<TKey, TValue> dictionary, TKey key, [CallerMemberName] string caller = "unknown")
+        public static void MissingKey<TKey, TValue>(this IGuardClause guardClause, IDictionary<TKey, TValue> dictionary, TKey key)
         {
+            string caller = new StackTrace().GetFrame(1).GetMethod().Name;
             string keyString = key.ToString() ?? "null";
             string message = $"{caller} failed because the IDictionary did not have an item with the key '{keyString}'.";
-
+            
             if (!dictionary.ContainsKey(key)) throw new ArgumentException(message);
         }
 
         public static void MissingKey<TKey, TValue>(this IGuardClause guardClause, IDictionary<TKey, TValue> dictionary, TKey key, string message, [CallerMemberName] string caller = "unknown")
         {
             string keyString = key.ToString() ?? "null";
-            if (message.IsNullOrWhitespace()) message = $"{caller} failed because the IDictionary did not have an item with the key '{keyString}'.";
+            if (string.IsNullOrWhiteSpace(message)) message = $"{caller} failed because the IDictionary did not have an item with the key '{keyString}'.";
+
 
             if (!dictionary.ContainsKey(key)) throw new ArgumentException(message);
         }

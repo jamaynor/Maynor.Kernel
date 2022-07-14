@@ -6,9 +6,9 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>Maynor</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.9.1.1</Version>
+		<Version>0.9.1.2</Version>
 		<Description>A small set of of classes that simplify .net development. Several extension methods and support for Domain Driven Design.</Description>
-		<Company>Jeremy Maynor</Company>
+		<Company>J. A. Maynor, Ltd.</Company>
 		<Product>Maynor Kernel</Product>
 		<Copyright>Copyright 2022 - all rights reserved</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
@@ -17,6 +17,10 @@
 		<RepositoryUrl>https://github.com/jamaynor/Maynor.Kernel</RepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Authors>Jeremy A. Maynor</Authors>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>utility, DDD</PackageTags>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

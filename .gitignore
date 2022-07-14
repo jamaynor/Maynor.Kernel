@@ -8,3 +8,4 @@
 /src/Maynor.Kernel/bin
 /test/Maynor.Kernel.Tests/obj
 /test/Maynor.Kernel.Tests/bin/Debug/net6.0
+/test/Maynor.Kernel.Tests/bin/Release/net6.0
